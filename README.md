@@ -2,6 +2,9 @@
 
 O jogo da cobrinha em Html, Css e JavaScript!
 
+Cê ficar tranquilo para jogar o jogo clonando o repositório ou acessando:  
+snakegame-one-opal.vercel.app
+
 ## Dependências
 
 O projeto foi desenvolvido com as seguintes dependências:
@@ -10,5 +13,5 @@ O projeto foi desenvolvido com as seguintes dependências:
 - **[CSS](https://vite.dev)** – CSS3
 - **[JavaScript](https://threejs.org)** – ECMAScript 2024
 
-by caiothevisual
+by caiothevisual  
 #caiobavisuals #snakegame #html #css #javascript
