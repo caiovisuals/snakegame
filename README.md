@@ -3,7 +3,7 @@
 O jogo da cobrinha em Html, Css e JavaScript!
 
 Cê ficar tranquilo para jogar o jogo clonando o repositório ou acessando:  
-snakegame-one-opal.vercel.app
+https://snakegame-one-opal.vercel.app
 
 ## Dependências
 
