@@ -1,6 +1,6 @@
 # SNAKEGAME 
 
-O jogo da cobrinha em Html, Css e JavaScript!
+O jogo da cobrinha em Html, Css e JavaScript! Em breve com modo multiplayer usando WS.
 
 Cê ficar tranquilo para jogar o jogo clonando o repositório ou acessando:  
 https://snakegame-one-opal.vercel.app

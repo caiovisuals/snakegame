@@ -3,52 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="snakegame - caiothevisual"/>
-    <meta name="theme-color" content="#7e80ff"/>
-    <meta name="keywords" content="snakegame, caiothevisual, bahia, brasil"/>
+    <meta name="description" content="snakegame - caiothevisual" />
+    <meta name="theme-color" content="#7e80ff" />
+    <meta name="keywords" content="snakegame, caiothevisual, bahia, brasil" />
     <meta name="news_keywords" content="snakegame, caiothevisual, bahia, brasil">
 
-    <meta name="robots" content="index, follow"/>
-    <meta name="googlebot" content="index, follow"/>
-    <meta name="google" content="notranslate"/>
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="google" content="notranslate" />
 
-    <meta property="og:site_name" content="snakegame - caiothevisual"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:title" content="snakegame - caiothevisual"/>
-    <meta property="og:description" content="snakegame - caiothevisual"/>
-    <meta property="og:image" itemprop="image" content="./assets/ogimage.png"/>
-    <meta property="og:image:type" content="image/png"/>
-    <meta property="og:image:width" content="1200"/>
-    <meta property="og:image:height" content="630"/>
-    <meta property="og:image:alt" content="Preview do jogo, SnakeGame, por caiothevisual"/>
-    <meta property="og:locale" content="pt_BR"/>
+    <meta property="og:site_name" content="snakegame - caiothevisual" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="snakegame - caiothevisual" />
+    <meta property="og:description" content="snakegame - caiothevisual" />
+    <meta property="og:image" itemprop="image" content="./assets/ogimage.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Preview do jogo, SnakeGame, por caiothevisual" />
+    <meta property="og:locale" content="pt_BR" />
     <meta name='og:country-name' content='Brasil'>
     
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon 128x128.png"/>
-    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon 16x16.png"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon 128x128.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon 16x16.png" />
 
-    <meta name="twitter:site" content="@caioba2007"/>
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:image" content="./assets/meta-assets/ogimage.png"/>
-    <link rel="icon" type="image/png" href="./assets/favicon 128x128.png"/>
-    <link rel="stylesheet" href="./css/styles.css">
+    <meta name="twitter:site" content="@caioba2007" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="./assets/meta-assets/ogimage.png" />
+    <link rel="icon" type="image/png" href="./assets/favicon 128x128.png" />
+    <link rel="stylesheet" href="./css/styles.css" >
     <title>snakegame - bycaio</title>
 </head>
 <body>
-    <div class="score-box">
-        <h1 class="score-text">SCORE:</h1>
-        <h2 class="score-value">00</h2>
+    <div class="menu-container">
+        <h1 class="menu-title">SNAKEGAME</h1>
+        <p class="menu-subtitle">Escolha um modo</p>
+
+        <a href="/game/solo.html" class="btn-menu" id="btn-solo">Solo</a>
+        <a href="/game/multiplayer.html" class="btn-menu" id="btn-multi">Multiplayer</a>
+        <a href="/credits/credits.html" class="btn-menu" id="btn-multi">Créditos</a>
     </div>
-    <div class="game">
-        <div class="snake-color">
-            <button id="snake-default" class="active"></button>
-            <button id="snake-blue"></button>
-            <button id="snake-green"></button>
-            <button id="snake-orange"></button>
-        </div>
-        <canvas width="600" height="600"></canvas>
-    </div>
-    <button class="btn-play">Jogar Novamente</button>
-    <script src="./js/script.js"></script>
 </body>
 </html>

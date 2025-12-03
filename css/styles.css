@@ -7,8 +7,14 @@
     font-family: 'Poppins';
 }
 
+html {
+    width: 100%;
+    height: 100%;
+}
+
 body {
     background-color: #191919;
+    color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,87 +24,40 @@ body {
     padding: 50px 0;
 }
 
-.score-box {
+.menu-container {
+    position: fixed;
+    inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: white;
+    gap: 20px;
+    z-index: 999;
 }
 
-.score-box h1 {
-    font-size: 40px;
+.menu-title {
+    font-size: 6rem;
+    color: white
 }
 
-.score-box h2 {
-    font-size: 120px;
-    line-height: 90px;
+.menu-subtitle {
+    font-size: 1.5rem;
+    color: #ddd;
 }
 
-.game {
-    display: flex;
-    flex-direction: row;
-    gap: 25px;
-    margin-right: 41px;
-}
-
-canvas {
-    background-color: #252525;
-    box-shadow: 0 0 15px rgb(0, 0, 0, 0.5);
-}
-
-.snake-color {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.snake-color button {
-    border-radius: 999px;
-    border: 5px solid #404040;
-    padding: 15px;
-    transition: all 0.3s ease;
-}
-
-.snake-color button:hover  {
-    border: 5px solid #606060;
-    transition: all 0.3s ease;
-}
-
-.snake-color button.active {
-    border: 5px solid #707070;
-    transition: all 0.3s ease;
-}
-
-#snake-default {
-    background-color: #CCCCCC;
-}
-
-#snake-blue {
-    background-color: #0088EC;
-}
-
-#snake-green {
-    background-color: #45D831;
-}
-
-#snake-orange {
-    background-color: #EA6417;
-}
-
-.btn-play {
-    border: 0;
-    padding: 5px 15px;
-    border-radius: 999px;
-    color: white;
-    font-weight: 600;
-    background-color: #252525;
-    font-size: 17px;
+.btn-menu {
+    width: 300px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 15px;
+    background: #5f5f5f;
+    color: #fff;
+    font-size: 1.2rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: 0.2s;
+    text-decoration: none;
 }
 
-.btn-play:hover {
-    background-color: #303030;
-    transition: all 0.3s ease;
+.btn-menu:hover {
+    background: #8b8b8b;
 }
