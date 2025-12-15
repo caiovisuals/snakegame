@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Multiplayer - 5 Jogadores</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            font-family: 'Poppins';
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #191919;
+            color: white;
+            font-family: 'Courier New', monospace;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .info {
+            background-color: #252525;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .player-box {
+            background-color: #252525;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #404040;
+        }
+        .player-box.active {
+            border-color: #45D831;
+        }
+        .player-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .player-score {
+            font-size: 24px;
+        }
+        button {
+            background-color: #45D831;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #3bc428;
+        }
+        .log {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        .error { color: #ff6b6b; }
+        .success { color: #45D831; }
+        .info-text { color: #aaa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teste Multiplayer - SnakeGame</h1>
+        
+        <div class="info">
+            <h3>Status da Conexão</h3>
+            <p>Servidor WebSocket: <span id="ws-status">Conectando...</span></p>
+            <p>Jogadores Conectados: <span id="player-count">0</span> / 5</p>
+            
+            <button onclick="connectPlayer()">Adicionar Jogador</button>
+            <button onclick="disconnectAll()">Desconectar Todos</button>
+            <button onclick="clearLogs()">Limpar Logs</button>
+        </div>
+
+        <div class="status" id="players-status"></div>
+
+        <div class="log">
+            <h3>Logs</h3>
+            <div id="log-container"></div>
+        </div>
+    </div>
+
+    <script>
+        const connections = []
+        let playerCounter = 0
+
+        function addLog(message, type = 'info-text') {
+            const logContainer = document.getElementById('log-container')
+            const entry = document.createElement('div')
+            entry.className = `log-entry ${type}`
+            const time = new Date().toLocaleTimeString()
+            entry.textContent = `[${time}] ${message}`
+            logContainer.appendChild(entry)
+            logContainer.scrollTop = logContainer.scrollHeight
+        }
+
+        function updatePlayerStatus() {
+            const statusDiv = document.getElementById('players-status')
+            statusDiv.innerHTML = connections.map((conn, index) => `
+                <div class="player-box ${conn.ws.readyState === 1 ? 'active' : ''}">
+                    <div class="player-name">${conn.name}</div>
+                    <div class="player-score">Score: ${conn.score || 0}</div>
+                    <div style="font-size: 12px; color: #aaa;">
+                        Status: ${conn.alive ? 'Vivo' : 'Morto'}
+                    </div>
+                    <button onclick="disconnectPlayer(${index})">Desconectar</button>
+                </div>
+            `).join('')
+            
+            document.getElementById('player-count').textContent = connections.length
+        }
+
+        function connectPlayer() {
+            if (connections.length >= 5) {
+                addLog('Sala cheia! Máximo de 5 jogadores.', 'error')
+                return
+            }
+
+            playerCounter++
+            const name = `Jogador${playerCounter}`
+            
+            const ws = new WebSocket('ws://localhost:9090')
+            const connection = { name, ws, score: 0, alive: true }
+            
+            ws.onopen = () => {
+                ws.send(JSON.stringify({ type: 'join', name }))
+                addLog(`${name} conectado!`, 'success')
+            }
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data)
+                
+                if (data.type === 'joined') {
+                    connection.id = data.id
+                    addLog(`${name} entrou no jogo (ID: ${data.id})`, 'success')
+                }
+
+                if (data.type === 'state') {
+                    const playerData = data.players[connection.id]
+                    if (playerData) {
+                        connection.score = playerData.score
+                        connection.alive = playerData.alive
+                        updatePlayerStatus()
+                    }
+                }
+
+                if (data.type === 'error') {
+                    addLog(`Erro: ${data.message}`, 'error')
+                }
+            }
+
+            ws.onclose = () => {
+                addLog(`${name} desconectado`, 'info-text')
+                const index = connections.indexOf(connection)
+                if (index > -1) {
+                    connections.splice(index, 1)
+                    updatePlayerStatus()
+                }
+            }
+
+            ws.onerror = () => {
+                addLog(`Erro de conexão para ${name}`, 'error')
+            }
+
+            connections.push(connection)
+            updatePlayerStatus()
+        }
+
+        function disconnectPlayer(index) {
+            if (connections[index]) {
+                connections[index].ws.close()
+            }
+        }
+
+        function disconnectAll() {
+            connections.forEach(conn => conn.ws.close())
+            connections.length = 0
+            updatePlayerStatus()
+            addLog('Todos os jogadores desconectados', 'info-text')
+        }
+
+        function clearLogs() {
+            document.getElementById('log-container').innerHTML = ''
+        }
+
+        // Verifica status do servidor
+        const testWs = new WebSocket('ws://localhost:9090')
+        testWs.onopen = () => {
+            document.getElementById('ws-status').textContent = '🟢 Online'
+            document.getElementById('ws-status').style.color = '#45D831'
+            testWs.close()
+            addLog('Servidor WebSocket está online!', 'success')
+        }
+        testWs.onerror = () => {
+            document.getElementById('ws-status').textContent = '🔴 Offline'
+            document.getElementById('ws-status').style.color = '#ff6b6b'
+            addLog('Erro: Servidor WebSocket está offline!', 'error')
+        }
+    </script>
+</body>
+</html>

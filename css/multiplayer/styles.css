@@ -24,6 +24,132 @@ body {
     padding: 50px 0;
 }
 
+.back-btn {
+    top: 20px;
+    left: 20px;
+    background: #252525;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #212121;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 600;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #252525;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #aaa;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    border: 2px solid #404040;
+    border-radius: 8px;
+    background-color: #191919;
+    color: white;
+    margin-bottom: 20px;
+    font-family: 'Poppins';
+    transition: border-color 0.3s ease;
+}
+
+.modal-content input:focus {
+    outline: none;
+    border-color: white;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #151515;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #101010;
+    transform: scale(1.02);
+}
+
+.modal-info {
+    font-size: 13px;
+    color: #666;
+    margin-top: 15px;
+}
+
+.game-over-message {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(234, 100, 23, 0.95);
+    padding: 30px 50px;
+    border-radius: 15px;
+    text-align: center;
+    z-index: 100;
+    animation: pulseAnimation 1s ease infinite;
+}
+
+@keyframes pulseAnimation {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.05); }
+}
+
+.game-over-message h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.game-over-message p {
+    font-size: 16px;
+    color: #fff;
+}
+
 .game {
     display: flex;
     flex-direction: row;
@@ -60,13 +186,78 @@ canvas {
     line-height: 90px;
 }
 
-.snake-color {
+.players-section {
+    width: 100%;
+    background-color: #252525;
+    border-radius: 10px;
+    padding: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.players-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.players-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.player-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #191919;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.player-item:hover {
+    background-color: #2a2a2a;
+}
+
+.player-item.current-player {
+    background-color: #2a4020;
+    border: 2px solid #45D831;
+}
+
+.player-info {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 12px;
-    width: min-content;
+    gap: 10px;
+}
+
+.player-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #404040;
+}
+
+.player-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.player-score {
+    font-size: 18px;
+    font-weight: 700;
+    color: #45D831;
+}
+
+.snake-color {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 20px;    
 }
 
 .snake-color button {
@@ -88,31 +279,37 @@ canvas {
 
 #snake-default {
     background-color: #CCCCCC;
+    aspect-ratio: 1/1;
 }
 
 #snake-blue {
     background-color: #0088EC;
+    aspect-ratio: 1/1;
 }
 
 #snake-green {
     background-color: #45D831;
+    aspect-ratio: 1/1;
 }
 
 #snake-orange {
     background-color: #EA6417;
+    aspect-ratio: 1/1;
 }
 
 #snake-purple {
-    background-color: #a20ec0;
+    background-color: #A20EC0;
+    aspect-ratio: 1/1;
 }
 
 #snake-yellow {
-    background-color: #ffd900;
+    background-color: #FFD900;
+    aspect-ratio: 1/1;
 }
 
 .btn-play {
     border: 0;
-    padding: 5px 15px;
+    padding: 5px 20px;
     border-radius: 999px;
     color: white;
     font-weight: 600;
@@ -120,6 +317,7 @@ canvas {
     font-size: 17px;
     cursor: pointer;
     transition: all 0.3s ease;
+    outline: none;
 }
 
 .btn-play:hover {

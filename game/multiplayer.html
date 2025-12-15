@@ -8,29 +8,57 @@
     <title>snakegame - multiplayer</title>
 </head>
 <body>
+    <div id="name-modal" class="modal" data-testid="name-modal">
+        <div class="modal-content">
+            <div>
+                <h2 style="line-height: 40%;">É A HORA DO SHOW!</h2>
+                <p>Digite seu nome para entrar:</p>
+            </div>
+            <input 
+                type="text" 
+                id="player-name" 
+                placeholder="Digite seu nome" 
+                maxlength="15"
+                data-testid="player-name-input"
+            />
+            <div class="snake-color">
+                <button id="snake-default" data-color="#CCCCCC" class="active"></button>
+                <button id="snake-blue" data-color="#0088EC"></button>
+                <button id="snake-green" data-color="#45D831"></button>
+                <button id="snake-orange" data-color="#EA6417"></button>
+                <button id="snake-purple" data-color="#A20EC0"></button>
+                <button id="snake-yellow" data-color="#FFD900"></button>
+            </div>
+            <button id="join-game" data-testid="join-game-btn">Entrar no Jogo</button>
+            <p class="modal-info">Máximo de 5 jogadores por sala</p>
+        </div>
+    </div>
+
+    <div class="game-over-message" data-testid="game-over-message">
+        <h2>Você morreu!</h2>
+        <p>Clique em "Jogar Novamente" para reviver</p>
+    </div>
+
     <div class="game">
-        <canvas width="900" height="600"></canvas>
+        <canvas width="900" height="600" data-testid="game-canvas"></canvas>
         <div class="menu-sidebar">
             <div class="score-box">
                 <h1 class="score-text">SCORE:</h1>
-                <h2 class="score-value">00</h2>
+                <h2 class="score-value" data-testid="player-score">00</h2>
             </div>
-            <div class="snake-color">
-                <div style="display: flex; gap: 12px;">
-
-                    <button id="snake-default" class="active"></button>
-                    <button id="snake-blue"></button>
-                    <button id="snake-green"></button>
-                </div>
-                <div style="display: flex; gap: 12px;">
-                    <button id="snake-orange"></button>
-                    <button id="snake-purple"></button>
-                    <button id="snake-yellow"></button>
+            <div class="players-section">
+                <h3 class="players-title">RANKING</h3>
+                <div class="players-list" data-testid="players-list">
                 </div>
             </div>
         </div>
     </div>
     <button class="btn-play">Jogar Novamente</button>
+    <a href="/index.html" class="back-btn" style="position: absolute; border-radius: 100%; padding: 5px; aspect-ratio: 1/1; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; outline: none; border: none; cursor: pointer;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6"/>
+        </svg>
+    </a>
     <script src="../js/multiplayer/client.js"></script>
 </body>
 </html>
