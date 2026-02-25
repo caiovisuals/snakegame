@@ -1,7 +1,7 @@
 # SNAKEGAME 
 
 O jogo da cobrinha classico feito em Html, Css e JavaScript, feito com intuito de estudos! Também com versão multiplayer usando WebSocket.
-Clone o repositório ou acesse o deploy para jogar:
+Clone o repositório ou acesse o deploy para jogar:<br/>
 https://snakegame-one-opal.vercel.app
 
 ## Capturas de Telas
