@@ -6,11 +6,7 @@ https://snakegame-one-opal.vercel.app
 
 ## Capturas de Telas
 
-![Menu Principal](assets/screenshots/1.png)
-
-![Modo Solo](assets/screenshots/2.png)
-
-![Modo Multiplayer](assets/screenshots/3.png)
+| ![](assets/screenshots/1.png) | ![](assets/screenshots/2.png) | ![](assets/screenshots/3.png) |
 
 ## Objetivos
 
