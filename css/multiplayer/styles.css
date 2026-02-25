@@ -127,22 +127,22 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(234, 100, 23, 0.95);
+    background-color: #202020;
     padding: 30px 50px;
     border-radius: 15px;
     text-align: center;
     z-index: 100;
-    animation: pulseAnimation 1s ease infinite;
+    animation: pulseAnimation 5s ease infinite;
+    box-shadow: 0 0 15px rgb(0, 0, 0, 0.5);
 }
 
 @keyframes pulseAnimation {
     0%, 100% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.05); }
+    50% { transform: translate(-50%, -50%) scale(1.025); }
 }
 
 .game-over-message h2 {
     font-size: 36px;
-    margin-bottom: 10px;
 }
 
 .game-over-message p {
@@ -209,6 +209,8 @@ canvas {
 
 .player-item {
     display: flex;
+    flex-direction: row;
+    gap: 22px;
     justify-content: space-between;
     align-items: center;
     padding: 10px;

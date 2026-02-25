@@ -25,6 +25,14 @@ window.addEventListener("load", () => {
     nameInput.focus()
 })
 
+document.querySelectorAll(".snake-color button").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll(".snake-color button").forEach(btn => btn.classList.remove("active"))
+        button.classList.add("active")
+        selectedColor = button.dataset.color
+    })
+})
+
 joinButton.addEventListener("click", () => {
     const name = nameInput.value.trim()
     if (name.length === 0) {
@@ -47,7 +55,7 @@ nameInput.addEventListener("keypress", (e) => {
 })
 
 function connectToServer() {
-    ws = new WebSocket("ws://localhost:8081")
+    ws = new WebSocket("ws://localhost:8080")
     
     ws.onopen = () => {
         ws.send(JSON.stringify({
@@ -163,7 +171,7 @@ function drawSnake(snake, color, isCurrentPlayer) {
         ctx.fillRect(position.x, position.y, size, size)
         
         if (isCurrentPlayer && index === snake.length - 1) {
-            ctx.strokeStyle = "#ffffff"
+            ctx.strokeStyle = selectedColor
             ctx.lineWidth = 2
             ctx.strokeRect(position.x + 2, position.y + 2, size - 4, size - 4)
         }
@@ -208,8 +216,6 @@ function updatePlayersList() {
         .sort(([, a], [, b]) => b.score - a.score)
     
     playersList.innerHTML = sortedPlayers.map(([id, player], index) => {
-        const medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : ""
-        const statusIcon = player.alive ? "🐍" : "💀"
         const isCurrentPlayer = id === playerId
         const className = isCurrentPlayer ? "current-player" : ""
         
@@ -217,7 +223,7 @@ function updatePlayersList() {
             <div class="player-item ${className}" data-testid="player-item-${player.name}">
                 <div class="player-info">
                     <span class="player-color" style="background-color: ${player.color}"></span>
-                    <span class="player-name">${medal} ${player.name} ${statusIcon}</span>
+                    <span class="player-name">${player.name}</span>
                 </div>
                 <span class="player-score">${player.score}</span>
             </div>
