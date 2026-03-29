@@ -124,3 +124,65 @@ canvas {
     background-color: #303030;
     transition: all 0.3s ease;
 }
+
+.pause-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 100;
+    backdrop-filter: blur(2px);
+}
+ 
+.pause-overlay h2 {
+    font-size: 48px;
+    letter-spacing: 4px;
+}
+ 
+.pause-overlay p {
+    font-size: 16px;
+    color: #aaa;
+}
+
+.dpad {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    user-select: none;
+}
+ 
+.dpad-middle {
+    display: flex;
+    gap: 4px;
+}
+ 
+.dpad-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    border: none;
+    background: #2e2e2e;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+ 
+.dpad-btn:active {
+    background: #444;
+}
+
+@media (max-width: 700px) {
+    .dpad {
+        display: flex;
+    }
+}

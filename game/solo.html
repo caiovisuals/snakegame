@@ -12,6 +12,10 @@
         <h1 class="score-text">SCORE:</h1>
         <h2 class="score-value">00</h2>
     </div>
+    <div class="pause-overlay">
+        <h2>PAUSADO</h2>
+        <p>Pressione Esc para continuar</p>
+    </div>
     <div class="game">
         <div class="snake-color">
             <button id="snake-default" class="active"></button>
@@ -20,6 +24,14 @@
             <button id="snake-orange"></button>
         </div>
         <canvas width="600" height="600" data-testid="game-canvas"></canvas>
+    </div>
+    <div class="dpad">
+        <button id="btn-up" class="dpad-btn dpad-up">▲</button>
+        <div class="dpad-middle">
+            <button id="btn-left" class="dpad-btn dpad-left">◀</button>
+            <button id="btn-right" class="dpad-btn dpad-right">▶</button>
+        </div>
+        <button id="btn-down" class="dpad-btn dpad-down">▼</button>
     </div>
     <button class="btn-play">Jogar Novamente</button>
     <a href="/index.html" class="back-btn" style="position: absolute; border-radius: 100%; padding: 5px; aspect-ratio: 1/1; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; outline: none; border: none; cursor: pointer;">

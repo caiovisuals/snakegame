@@ -109,19 +109,16 @@ function connectToServer() {
     }
 }
 
-document.addEventListener("keydown", ({ key }) => {
+function sendDirection(value) {
     if (!ws || !isAlive) return
-    
-    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)) {
-        const direction = {
-            ArrowUp: "up",
-            ArrowDown: "down",
-            ArrowLeft: "left",
-            ArrowRight: "right"
-        }[key]
-        
-        ws.send(JSON.stringify({ type: "direction", value: direction }))
-    }
+    ws.send(JSON.stringify({ type: "direction", value }))
+}
+
+document.addEventListener("keydown", ({ key }) => {
+    if (key === "ArrowUp"    || key === "w" || key === "W") sendDirection("up")
+    if (key === "ArrowDown"  || key === "s" || key === "S") sendDirection("down")
+    if (key === "ArrowLeft"  || key === "a" || key === "A") sendDirection("left")
+    if (key === "ArrowRight" || key === "d" || key === "D") sendDirection("right")
 })
 
 buttonPlay.addEventListener("click", () => {
@@ -132,6 +129,45 @@ buttonPlay.addEventListener("click", () => {
     if (gameOverMessage) {
         gameOverMessage.style.display = "none"
     }
+})
+
+let touchStartX = 0
+let touchStartY = 0
+
+canvas.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX
+    touchStartY = e.touches[0].clientY
+    e.preventDefault()
+}, { passive: false })
+
+canvas.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX
+    const dy = e.changedTouches[0].clientY - touchStartY
+    const absDx = Math.abs(dx)
+    const absDy = Math.abs(dy)
+ 
+    if (Math.max(absDx, absDy) < 10) return
+ 
+    if (absDx > absDy) {
+        sendDirection(dx > 0 ? "right" : "left")
+    } else {
+        sendDirection(dy > 0 ? "down" : "up")
+    }
+    e.preventDefault()
+}, { passive: false })
+ 
+const dpadMap = {
+    "btn-up":    "up",
+    "btn-down":  "down",
+    "btn-left":  "left",
+    "btn-right": "right",
+}
+ 
+Object.entries(dpadMap).forEach(([id, dir]) => {
+    const btn = document.getElementById(id)
+    if (!btn) return
+    btn.addEventListener("touchstart", (e) => { sendDirection(dir); e.preventDefault() }, { passive: false })
+    btn.addEventListener("click", () => sendDirection(dir))
 })
 
 function drawGrid() {

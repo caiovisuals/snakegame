@@ -134,6 +134,15 @@ const gameWin = () => {
     scoreText.innerText = "PARABÉNS"
 }
 
+const togglePause = () => {
+    if (gameOverState || gameWinState) return
+    pauseState = !pauseState
+    if (pauseOverlay) {
+        pauseOverlay.style.display = pauseState ? "flex" : "none"
+    }
+    if (!pauseState) gameLoop()
+}
+
 const gameLoop = () => {
     clearInterval(loopId)
     ctx.clearRect(0, 0, 600, 600)
@@ -159,6 +168,11 @@ const gameLoop = () => {
 gameLoop()
 
 document.addEventListener("keydown", ({ key }) => {
+    if (key === "Escape") {
+        togglePause()
+        return
+    }
+
     if (key == "ArrowRight" && direction != "left") direction = "right"
     if (key == "ArrowLeft" && direction != "right") direction = "left"
     if (key == "ArrowDown" && direction != "up") direction = "down"
@@ -181,4 +195,45 @@ buttonPlay.addEventListener("click", () => {
     score.innerText = "00"
     scoreText.innerText = "SCORE:"
     snake = [initialPosition]
+})
+
+let touchStartX = 0
+let touchStartY = 0
+
+canvas.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX
+    touchStartY = e.touches[0].clientY
+    e.preventDefault()
+}, { passive: false })
+
+canvas.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX
+    const dy = e.changedTouches[0].clientY - touchStartY
+    const absDx = Math.abs(dx)
+    const absDy = Math.abs(dy)
+ 
+    if (Math.max(absDx, absDy) < 10) return
+ 
+    if (absDx > absDy) {
+        if (dx > 0 && direction != "left") direction = "right"
+        if (dx < 0 && direction != "right") direction = "left"
+    } else {
+        if (dy > 0 && direction != "up") direction = "down"
+        if (dy < 0 && direction != "down") direction = "up"
+    }
+    e.preventDefault()
+}, { passive: false })
+
+const dpadMap = {
+    "btn-up":    () => { if (direction != "down")  direction = "up"    },
+    "btn-down":  () => { if (direction != "up")    direction = "down"  },
+    "btn-left":  () => { if (direction != "right") direction = "left"  },
+    "btn-right": () => { if (direction != "left")  direction = "right" },
+}
+
+Object.entries(dpadMap).forEach(([id, fn]) => {
+    const btn = document.getElementById(id)
+    if (!btn) return
+    btn.addEventListener("touchstart", (e) => { fn(); e.preventDefault() }, { passive: false })
+    btn.addEventListener("click", fn)
 })

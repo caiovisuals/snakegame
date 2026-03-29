@@ -326,3 +326,36 @@ canvas {
     background-color: #303030;
     transition: all 0.3s ease;
 }
+
+.dpad {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    user-select: none;
+}
+ 
+.dpad-middle { display: flex; gap: 4px; }
+ 
+.dpad-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    border: none;
+    background: #2e2e2e;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+.dpad-btn:active { background: #444; }
+
+@media (max-width: 960px) {
+    .dpad {
+        display: flex;
+    }
+}
