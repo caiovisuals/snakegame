@@ -125,6 +125,8 @@ function gameLoop() {
         if (!player.alive || !player.direction) continue
         const head = player.snake[player.snake.length - 1]
 
+        if (player.nextDirection) player.direction = player.nextDirection
+
         let newHead = { ...head }
         if (player.direction === "right") newHead.x += size
         if (player.direction === "left") newHead.x -= size
@@ -187,7 +189,13 @@ wss.on("connection", ws => {
     let playerId = null
     
     ws.on("message", message => {
-        const data = JSON.parse(message)
+        let data
+
+        try {
+            data = JSON.parse(message)
+        } catch {
+            return
+        }
         
         if (data.type === "join") {
             playerId = Date.now().toString() + Math.random()
@@ -197,11 +205,14 @@ wss.on("connection", ws => {
                 ? data.color
                 : getAvailableColor()
 
+            const safeName = String(data.name || "Jogador").trim().slice(0, 15) || "Jogador"
+            
             players[playerId] = {
                 id: playerId,
-                name: data.name || "Jogador",
+                name: safeName,
                 color: chosenColor,
                 direction: "right",
+                nextDirection: "right",
                 snake: [startPos],
                 score: 0,
                 alive: true,
@@ -214,7 +225,7 @@ wss.on("connection", ws => {
                 color: chosenColor
             }))
             
-            console.log(`${data.name} entrou no jogo (${activePlayers + 1}/5)`)
+            console.log(`${safeName} entrou no jogo (${activePlayers + 1}/5)`)
         }
         
         // Jogador muda direção
@@ -231,7 +242,7 @@ wss.on("connection", ws => {
             
             // Impede virar 180 graus
             if (data.value !== opposite[player.direction]) {
-                player.direction = data.value
+                player.nextDirection = data.value
             }
         }
         
@@ -242,6 +253,7 @@ wss.on("connection", ws => {
             
             player.snake = [startPos]
             player.direction = "right"
+            player.nextDirection = "right"
             player.alive = true
             player.score = 0
             

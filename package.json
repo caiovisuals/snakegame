@@ -1,4 +1,12 @@
 {
+  "name": "snakegame",
+  "version": "1.0",
+  "description": "Jogo da cobrinha clássico em HTML, CSS e JavaScript, com modo solo e multiplayer via WebSocket.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "server": "node js/multiplayer/server.js"
+  },
   "dependencies": {
     "ws": "^8.18.3"
   }

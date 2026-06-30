@@ -54,8 +54,17 @@ nameInput.addEventListener("keypress", (e) => {
     }
 })
 
+function getServerUrl() {
+    const host = window.location.hostname
+    if (!host || host === "localhost" || host === "127.0.0.1") {
+        return "ws://localhost:8080"
+    }
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
+    return `${protocol}//${host}:8080`
+}
+
 function connectToServer() {
-    ws = new WebSocket("ws://localhost:8080")
+    ws = new WebSocket(getServerUrl())
     
     ws.onopen = () => {
         ws.send(JSON.stringify({
@@ -245,6 +254,15 @@ function render() {
     }
 }
 
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;")
+}
+
 function updatePlayersList() {
     if (!playersList) return
     
@@ -254,14 +272,16 @@ function updatePlayersList() {
     playersList.innerHTML = sortedPlayers.map(([id, player], index) => {
         const isCurrentPlayer = id === playerId
         const className = isCurrentPlayer ? "current-player" : ""
+
+        const safeName = escapeHtml(player.name)
         
         return `
-            <div class="player-item ${className}" data-testid="player-item-${player.name}">
+            <div class="player-item ${className}" data-testid="player-item-${safeName}">
                 <div class="player-info">
                     <span class="player-color" style="background-color: ${player.color}"></span>
-                    <span class="player-name">${player.name}</span>
+                    <span class="player-name">${safeName}</span>
                 </div>
-                <span class="player-score">${player.score}</span>
+                <span class="player-score">${Number(player.score) || 0}</span>
             </div>
         `
     }).join("")

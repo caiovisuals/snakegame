@@ -11,9 +11,12 @@ const maxScore = 3990
 
 const initialPosition = { x: 270, y: 300 }
 let snake = [initialPosition]
-let direction, loopId
+let direction, nextDirection, loopId
 let gameOverState = false
 let gameWinState = false
+let pauseState = false
+
+const pauseOverlay = document.querySelector(".pause-overlay")
 
 const colorsSnake = {
     default: "#CCCCCC",
@@ -67,7 +70,10 @@ const drawSnake = () => {
 }
 
 const moveSnake = () => {
-    if (!direction || gameOverState || gameWinState) return
+    if (gameOverState || gameWinState) return
+    if (nextDirection) direction = nextDirection
+    if (!direction) return
+
     const head = snake[snake.length - 1]
     let newHead
     
@@ -140,11 +146,16 @@ const togglePause = () => {
     if (pauseOverlay) {
         pauseOverlay.style.display = pauseState ? "flex" : "none"
     }
-    if (!pauseState) gameLoop()
+    if (pauseState) {
+        clearTimeout(loopId)
+    } else {
+        gameLoop()
+    }
 }
 
 const gameLoop = () => {
-    clearInterval(loopId)
+    clearTimeout(loopId)
+    if (pauseState) return
     ctx.clearRect(0, 0, 600, 600)
     drawGrid()
     drawFood()
@@ -173,10 +184,10 @@ document.addEventListener("keydown", ({ key }) => {
         return
     }
 
-    if (key == "ArrowRight" && direction != "left") direction = "right"
-    if (key == "ArrowLeft" && direction != "right") direction = "left"
-    if (key == "ArrowDown" && direction != "up") direction = "down"
-    if (key == "ArrowUp" && direction != "down") direction = "up"
+    if (key == "ArrowRight" && direction != "left") nextDirection = "right"
+    if (key == "ArrowLeft" && direction != "right") nextDirection = "left"
+    if (key == "ArrowDown" && direction != "up") nextDirection = "down"
+    if (key == "ArrowUp" && direction != "down") nextDirection = "up"
 })
 
 document.querySelectorAll(".snake-color button").forEach(button => {
@@ -190,11 +201,16 @@ document.querySelectorAll(".snake-color button").forEach(button => {
 
 buttonPlay.addEventListener("click", () => {
     direction = undefined
+    nextDirection = undefined
     gameOverState = false
     gameWinState = false
+    pauseState = false
+    speed = 100
+    if (pauseOverlay) pauseOverlay.style.display = "none"
     score.innerText = "00"
     scoreText.innerText = "SCORE:"
-    snake = [initialPosition]
+    snake = [{ ...initialPosition }]
+    gameLoop()
 })
 
 let touchStartX = 0
@@ -215,20 +231,20 @@ canvas.addEventListener("touchend", (e) => {
     if (Math.max(absDx, absDy) < 10) return
  
     if (absDx > absDy) {
-        if (dx > 0 && direction != "left") direction = "right"
-        if (dx < 0 && direction != "right") direction = "left"
+        if (dx > 0 && direction != "left") nextDirection = "right"
+        if (dx < 0 && direction != "right") nextDirection = "left"
     } else {
-        if (dy > 0 && direction != "up") direction = "down"
-        if (dy < 0 && direction != "down") direction = "up"
+        if (dy > 0 && direction != "up") nextDirection = "down"
+        if (dy < 0 && direction != "down") nextDirection = "up"
     }
     e.preventDefault()
 }, { passive: false })
 
 const dpadMap = {
-    "btn-up":    () => { if (direction != "down")  direction = "up"    },
-    "btn-down":  () => { if (direction != "up")    direction = "down"  },
-    "btn-left":  () => { if (direction != "right") direction = "left"  },
-    "btn-right": () => { if (direction != "left")  direction = "right" },
+    "btn-up":    () => { if (direction != "down")  nextDirection = "up"    },
+    "btn-down":  () => { if (direction != "up")    nextDirection = "down"  },
+    "btn-left":  () => { if (direction != "right") nextDirection = "left"  },
+    "btn-right": () => { if (direction != "left")  nextDirection = "right" },
 }
 
 Object.entries(dpadMap).forEach(([id, fn]) => {
