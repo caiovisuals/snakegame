@@ -146,5 +146,5 @@ npm run server
 http://localhost:3000
 ```
 
-by caiothevisual
-#caiobavisuals #snakegame #html #css #javascript
+by caiothedev<br/>
+#snakegame #html #css #javascript #websocket

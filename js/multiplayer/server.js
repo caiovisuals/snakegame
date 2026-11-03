@@ -1,11 +1,14 @@
 import { WebSocketServer } from "ws"
+import { randomUUID } from "crypto"
 
-const wss = new WebSocketServer({ port: 8080 })
+const wss = new WebSocketServer({ port: 8080, maxPayload: 1024 })
 
 const size = 30
 const gameWidth = 900
 const gameHeight = 600
 const MAX_PLAYERS = 5
+const VALID_DIRECTIONS = new Set(["up", "down", "left", "right"])
+const FULL_ROOM_MESSAGE = `Sala cheia! Máximo de ${MAX_PLAYERS} jogadores.`
 
 const playerColors = [
     "#CCCCCC",  // default
@@ -176,12 +179,8 @@ function broadcast(data) {
 }
 
 wss.on("connection", ws => {
-    const activePlayers = Object.keys(players).length
-    if (activePlayers >= MAX_PLAYERS) {
-        ws.send(JSON.stringify({ 
-            type: "error", 
-            message: "Sala cheia! Máximo de 5 jogadores." 
-        }))
+    if (Object.keys(players).length >= MAX_PLAYERS) {
+        ws.send(JSON.stringify({ type: "error", message: FULL_ROOM_MESSAGE }))
         ws.close()
         return
     }
@@ -196,9 +195,21 @@ wss.on("connection", ws => {
         } catch {
             return
         }
+
+        if (!data || typeof data !== "object") return
         
         if (data.type === "join") {
-            playerId = Date.now().toString() + Math.random()
+            if (playerId) return
+
+            // A sala é verificada de novo aqui: várias conexões podem ter sido
+            // abertas antes de qualquer uma enviar "join"
+            if (Object.keys(players).length >= MAX_PLAYERS) {
+                ws.send(JSON.stringify({ type: "error", message: FULL_ROOM_MESSAGE }))
+                ws.close()
+                return
+            }
+
+            playerId = randomUUID()
             const startPos = getRandomStartPosition()
 
             const chosenColor = isColorAvailable(data.color)
@@ -225,13 +236,15 @@ wss.on("connection", ws => {
                 color: chosenColor
             }))
             
-            console.log(`${safeName} entrou no jogo (${activePlayers + 1}/5)`)
+            console.log(`${safeName} entrou no jogo (${Object.keys(players).length}/${MAX_PLAYERS})`)
         }
         
         // Jogador muda direção
         if (data.type === "direction" && playerId && players[playerId]) {
             const player = players[playerId]
             if (!player.alive) return
+
+            if (!VALID_DIRECTIONS.has(data.value)) return
             
             const opposite = {
                 up: "down",
@@ -260,6 +273,10 @@ wss.on("connection", ws => {
             console.log(`${player.name} voltou ao jogo`)
         }
     })
+
+    ws.on("error", err => {
+        console.warn("Erro na conexão:", err.message)
+    })
     
     ws.on("close", () => {
         if (playerId && players[playerId]) {
@@ -270,6 +287,6 @@ wss.on("connection", ws => {
 })
 
 console.log("Servidor WebSocket rodando na porta 8080")
-console.log("Máximo de 5 jogadores por sala")
+console.log(`Máximo de ${MAX_PLAYERS} jogadores por sala`)
 
 gameLoop()

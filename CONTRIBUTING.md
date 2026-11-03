@@ -6,4 +6,5 @@ Obrigado por considerar contribuir!
 
 Thank you for considering contributing!
 
-by caiothevisual
+by caiothedev<br/>
+#contributing #code
